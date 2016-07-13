@@ -45,7 +45,7 @@
 		E1D3D39C1D33521900307F02 /* NSString+md5.m in Sources */ = {isa = PBXBuildFile; fileRef = E1D3D39B1D33521900307F02 /* NSString+md5.m */; };
 		E1D3D3A21D33953D00307F02 /* DataTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = E1D3D3A11D33953D00307F02 /* DataTransformer.m */; };
 		E1D3D3A61D34A39600307F02 /* AFDownloadRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = E1D3D3A51D34A39600307F02 /* AFDownloadRequestOperation.m */; };
-		E1D3D3AA1D36300D00307F02 /* GApiLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = E1D3D3A91D36300D00307F02 /* GApiLogger.m */; };
+		E1D3D3AE1D363EB200307F02 /* GApiLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = E1D3D3AD1D363EB200307F02 /* GApiLogger.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -143,8 +143,8 @@
 		E1D3D3A11D33953D00307F02 /* DataTransformer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataTransformer.m; sourceTree = "<group>"; };
 		E1D3D3A41D34A39600307F02 /* AFDownloadRequestOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFDownloadRequestOperation.h; sourceTree = "<group>"; };
 		E1D3D3A51D34A39600307F02 /* AFDownloadRequestOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFDownloadRequestOperation.m; sourceTree = "<group>"; };
-		E1D3D3A81D36300D00307F02 /* GApiLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GApiLogger.h; sourceTree = "<group>"; };
-		E1D3D3A91D36300D00307F02 /* GApiLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GApiLogger.m; sourceTree = "<group>"; };
+		E1D3D3AC1D363EB200307F02 /* GApiLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GApiLogger.h; sourceTree = "<group>"; };
+		E1D3D3AD1D363EB200307F02 /* GApiLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GApiLogger.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -255,7 +255,7 @@
 				E1D3D38C1D2F79E900307F02 /* GApiConfig.m */,
 				E1A20BC21D0010CD00C8FF5E /* NWCategories */,
 				E1A20BB41D0001E700C8FF5E /* NetWorkCache */,
-				E1D3D3A71D362FF800307F02 /* GApiLog */,
+				E1D3D3AB1D363EB200307F02 /* GApiLogger */,
 			);
 			path = GNetwoking;
 			sourceTree = "<group>";
@@ -360,13 +360,13 @@
 			path = AFDownloadRequestOperation;
 			sourceTree = "<group>";
 		};
-		E1D3D3A71D362FF800307F02 /* GApiLog */ = {
+		E1D3D3AB1D363EB200307F02 /* GApiLogger */ = {
 			isa = PBXGroup;
 			children = (
-				E1D3D3A81D36300D00307F02 /* GApiLogger.h */,
-				E1D3D3A91D36300D00307F02 /* GApiLogger.m */,
+				E1D3D3AC1D363EB200307F02 /* GApiLogger.h */,
+				E1D3D3AD1D363EB200307F02 /* GApiLogger.m */,
 			);
-			path = GApiLog;
+			path = GApiLogger;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -503,10 +503,10 @@
 				E1A20BFC1D0017B000C8FF5E /* AFURLSessionManager.m in Sources */,
 				E1A20BF91D0017B000C8FF5E /* AFURLConnectionOperation.m in Sources */,
 				E1A20BF41D0017B000C8FF5E /* AFHTTPRequestOperation.m in Sources */,
-				E1D3D3AA1D36300D00307F02 /* GApiLogger.m in Sources */,
 				E1A20B851CFF017300C8FF5E /* ViewController.m in Sources */,
 				E1A20BFF1D0017B000C8FF5E /* AFNetworkActivityIndicatorManager.m in Sources */,
 				E1A20C031D0017B000C8FF5E /* UIImageView+AFNetworking.m in Sources */,
+				E1D3D3AE1D363EB200307F02 /* GApiLogger.m in Sources */,
 				E1A20BF51D0017B000C8FF5E /* AFHTTPRequestOperationManager.m in Sources */,
 				E1A20C001D0017B000C8FF5E /* UIActivityIndicatorView+AFNetworking.m in Sources */,
 				E1D3D3991D334A7C00307F02 /* MatchAPIManager.m in Sources */,
