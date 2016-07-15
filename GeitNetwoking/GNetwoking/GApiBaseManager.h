@@ -103,7 +103,7 @@ typedef NS_ENUM(NSInteger , GAPIManagerRequestPriority) {
 @protocol GApiBaseManagerCallBackDataTransformer <NSObject>
 
 @required
-- (id)manager:(GApiBaseManager *)manager transformData:(NSDictionary *)data;
+- (id)manager:(GApiBaseManager *)manager transformData:(id)data;
 
 @end
 
