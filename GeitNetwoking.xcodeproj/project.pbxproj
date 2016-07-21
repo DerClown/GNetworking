@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		65A734E75B2AA9616613055E /* libPods-GeitNetwoking.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A78C952A8F2E5B35C723E0B /* libPods-GeitNetwoking.a */; };
+		E109DB6B1D40AC3B00670DAD /* NSArray+NetWorkingMethods.m in Sources */ = {isa = PBXBuildFile; fileRef = E109DB681D40AC3B00670DAD /* NSArray+NetWorkingMethods.m */; };
+		E109DB6C1D40AC3B00670DAD /* NSDictionary+NetWorkingMehods.m in Sources */ = {isa = PBXBuildFile; fileRef = E109DB6A1D40AC3B00670DAD /* NSDictionary+NetWorkingMehods.m */; };
+		E109DB701D40AC5300670DAD /* GApiCache.m in Sources */ = {isa = PBXBuildFile; fileRef = E109DB6F1D40AC5300670DAD /* GApiCache.m */; };
 		E1A20B7F1CFF017300C8FF5E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = E1A20B7E1CFF017300C8FF5E /* main.m */; };
 		E1A20B821CFF017300C8FF5E /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E1A20B811CFF017300C8FF5E /* AppDelegate.m */; };
 		E1A20B851CFF017300C8FF5E /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E1A20B841CFF017300C8FF5E /* ViewController.m */; };
@@ -17,9 +20,6 @@
 		E1A20B981CFF017300C8FF5E /* GeitNetwokingTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E1A20B971CFF017300C8FF5E /* GeitNetwokingTests.m */; };
 		E1A20BA31CFF017300C8FF5E /* GeitNetwokingUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = E1A20BA21CFF017300C8FF5E /* GeitNetwokingUITests.m */; };
 		E1A20BB31CFF043400C8FF5E /* GApiBaseManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E1A20BB21CFF043400C8FF5E /* GApiBaseManager.m */; };
-		E1A20BB71D0001FC00C8FF5E /* GApiCache.m in Sources */ = {isa = PBXBuildFile; fileRef = E1A20BB61D0001FC00C8FF5E /* GApiCache.m */; };
-		E1A20BC51D0010F600C8FF5E /* NSDictionary+NetWorkingMehods.m in Sources */ = {isa = PBXBuildFile; fileRef = E1A20BC41D0010F600C8FF5E /* NSDictionary+NetWorkingMehods.m */; };
-		E1A20BC81D00110800C8FF5E /* NSArray+NetWorkingMethods.m in Sources */ = {isa = PBXBuildFile; fileRef = E1A20BC71D00110800C8FF5E /* NSArray+NetWorkingMethods.m */; };
 		E1A20C091D001EF000C8FF5E /* GApiAgent.m in Sources */ = {isa = PBXBuildFile; fileRef = E1A20C081D001EF000C8FF5E /* GApiAgent.m */; };
 		E1D3D38D1D2F79E900307F02 /* GApiConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = E1D3D38C1D2F79E900307F02 /* GApiConfig.m */; };
 		E1D3D3961D2FC3C900307F02 /* GApiResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = E1D3D3951D2FC3C900307F02 /* GApiResponse.m */; };
@@ -50,6 +50,12 @@
 		4A78C952A8F2E5B35C723E0B /* libPods-GeitNetwoking.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-GeitNetwoking.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6848CDE17ADB2C73A7ED5AF0 /* Pods-GeitNetwoking.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GeitNetwoking.debug.xcconfig"; path = "Pods/Target Support Files/Pods-GeitNetwoking/Pods-GeitNetwoking.debug.xcconfig"; sourceTree = "<group>"; };
 		B672E079FB460DEB303158EC /* Pods-GeitNetwoking.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GeitNetwoking.release.xcconfig"; path = "Pods/Target Support Files/Pods-GeitNetwoking/Pods-GeitNetwoking.release.xcconfig"; sourceTree = "<group>"; };
+		E109DB671D40AC3B00670DAD /* NSArray+NetWorkingMethods.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+NetWorkingMethods.h"; sourceTree = "<group>"; };
+		E109DB681D40AC3B00670DAD /* NSArray+NetWorkingMethods.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+NetWorkingMethods.m"; sourceTree = "<group>"; };
+		E109DB691D40AC3B00670DAD /* NSDictionary+NetWorkingMehods.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+NetWorkingMehods.h"; sourceTree = "<group>"; };
+		E109DB6A1D40AC3B00670DAD /* NSDictionary+NetWorkingMehods.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+NetWorkingMehods.m"; sourceTree = "<group>"; };
+		E109DB6E1D40AC5300670DAD /* GApiCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GApiCache.h; sourceTree = "<group>"; };
+		E109DB6F1D40AC5300670DAD /* GApiCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GApiCache.m; sourceTree = "<group>"; };
 		E1A20B7A1CFF017300C8FF5E /* GeitNetwoking.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GeitNetwoking.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E1A20B7E1CFF017300C8FF5E /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		E1A20B801CFF017300C8FF5E /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -68,12 +74,6 @@
 		E1A20BA41CFF017300C8FF5E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E1A20BB11CFF043400C8FF5E /* GApiBaseManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GApiBaseManager.h; sourceTree = "<group>"; };
 		E1A20BB21CFF043400C8FF5E /* GApiBaseManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GApiBaseManager.m; sourceTree = "<group>"; };
-		E1A20BB51D0001FC00C8FF5E /* GApiCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GApiCache.h; sourceTree = "<group>"; };
-		E1A20BB61D0001FC00C8FF5E /* GApiCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GApiCache.m; sourceTree = "<group>"; };
-		E1A20BC31D0010F600C8FF5E /* NSDictionary+NetWorkingMehods.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+NetWorkingMehods.h"; sourceTree = "<group>"; };
-		E1A20BC41D0010F600C8FF5E /* NSDictionary+NetWorkingMehods.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+NetWorkingMehods.m"; sourceTree = "<group>"; };
-		E1A20BC61D00110800C8FF5E /* NSArray+NetWorkingMethods.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+NetWorkingMethods.h"; sourceTree = "<group>"; };
-		E1A20BC71D00110800C8FF5E /* NSArray+NetWorkingMethods.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+NetWorkingMethods.m"; sourceTree = "<group>"; };
 		E1A20C071D001EF000C8FF5E /* GApiAgent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GApiAgent.h; sourceTree = "<group>"; };
 		E1A20C081D001EF000C8FF5E /* GApiAgent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GApiAgent.m; sourceTree = "<group>"; };
 		E1D3D38B1D2F79E900307F02 /* GApiConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GApiConfig.h; sourceTree = "<group>"; };
@@ -131,6 +131,26 @@
 				B672E079FB460DEB303158EC /* Pods-GeitNetwoking.release.xcconfig */,
 			);
 			name = Pods;
+			sourceTree = "<group>";
+		};
+		E109DB661D40AC3B00670DAD /* Categories */ = {
+			isa = PBXGroup;
+			children = (
+				E109DB671D40AC3B00670DAD /* NSArray+NetWorkingMethods.h */,
+				E109DB681D40AC3B00670DAD /* NSArray+NetWorkingMethods.m */,
+				E109DB691D40AC3B00670DAD /* NSDictionary+NetWorkingMehods.h */,
+				E109DB6A1D40AC3B00670DAD /* NSDictionary+NetWorkingMehods.m */,
+			);
+			path = Categories;
+			sourceTree = "<group>";
+		};
+		E109DB6D1D40AC5300670DAD /* GApiCache */ = {
+			isa = PBXGroup;
+			children = (
+				E109DB6E1D40AC5300670DAD /* GApiCache.h */,
+				E109DB6F1D40AC5300670DAD /* GApiCache.m */,
+			);
+			path = GApiCache;
 			sourceTree = "<group>";
 		};
 		E1A20B711CFF017200C8FF5E = {
@@ -215,31 +235,11 @@
 				E1A20C081D001EF000C8FF5E /* GApiAgent.m */,
 				E1D3D38B1D2F79E900307F02 /* GApiConfig.h */,
 				E1D3D38C1D2F79E900307F02 /* GApiConfig.m */,
-				E1A20BC21D0010CD00C8FF5E /* NWCategories */,
-				E1A20BB41D0001E700C8FF5E /* NetWorkCache */,
+				E109DB661D40AC3B00670DAD /* Categories */,
+				E109DB6D1D40AC5300670DAD /* GApiCache */,
 				E1D3D3AB1D363EB200307F02 /* GApiLogger */,
 			);
 			path = GNetwoking;
-			sourceTree = "<group>";
-		};
-		E1A20BB41D0001E700C8FF5E /* NetWorkCache */ = {
-			isa = PBXGroup;
-			children = (
-				E1A20BB51D0001FC00C8FF5E /* GApiCache.h */,
-				E1A20BB61D0001FC00C8FF5E /* GApiCache.m */,
-			);
-			path = NetWorkCache;
-			sourceTree = "<group>";
-		};
-		E1A20BC21D0010CD00C8FF5E /* NWCategories */ = {
-			isa = PBXGroup;
-			children = (
-				E1A20BC61D00110800C8FF5E /* NSArray+NetWorkingMethods.h */,
-				E1A20BC71D00110800C8FF5E /* NSArray+NetWorkingMethods.m */,
-				E1A20BC31D0010F600C8FF5E /* NSDictionary+NetWorkingMehods.h */,
-				E1A20BC41D0010F600C8FF5E /* NSDictionary+NetWorkingMehods.m */,
-			);
-			path = NWCategories;
 			sourceTree = "<group>";
 		};
 		E1D3D3AB1D363EB200307F02 /* GApiLogger */ = {
@@ -433,19 +433,19 @@
 			buildActionMask = 2147483647;
 			files = (
 				E1A20B851CFF017300C8FF5E /* ViewController.m in Sources */,
+				E109DB6B1D40AC3B00670DAD /* NSArray+NetWorkingMethods.m in Sources */,
+				E109DB6C1D40AC3B00670DAD /* NSDictionary+NetWorkingMehods.m in Sources */,
 				E1D3D3AE1D363EB200307F02 /* GApiLogger.m in Sources */,
 				E1D3D3991D334A7C00307F02 /* MatchAPIManager.m in Sources */,
 				E1A20B821CFF017300C8FF5E /* AppDelegate.m in Sources */,
 				E1A20C091D001EF000C8FF5E /* GApiAgent.m in Sources */,
-				E1A20BC51D0010F600C8FF5E /* NSDictionary+NetWorkingMehods.m in Sources */,
 				E1D3D39C1D33521900307F02 /* NSString+md5.m in Sources */,
 				E1A20B7F1CFF017300C8FF5E /* main.m in Sources */,
-				E1A20BC81D00110800C8FF5E /* NSArray+NetWorkingMethods.m in Sources */,
 				E1A20BB31CFF043400C8FF5E /* GApiBaseManager.m in Sources */,
 				E1D3D3A21D33953D00307F02 /* DataTransformer.m in Sources */,
 				E1D3D3961D2FC3C900307F02 /* GApiResponse.m in Sources */,
 				E1D3D38D1D2F79E900307F02 /* GApiConfig.m in Sources */,
-				E1A20BB71D0001FC00C8FF5E /* GApiCache.m in Sources */,
+				E109DB701D40AC5300670DAD /* GApiCache.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
