@@ -96,7 +96,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  The URL used to monitor reachability, and construct requests from relative paths in methods like `requestWithMethod:URLString:parameters:`, and the `GET` / `POST` / et al. convenience methods.
  */
-@property (nonatomic, strong, nullable) NSURL *baseURL;
+@property (readonly, nonatomic, strong, nullable) NSURL *baseURL;
 
 /**
  Requests created with `requestWithMethod:URLString:parameters:` & `multipartFormRequestWithMethod:URLString:parameters:constructingBodyWithBlock:` are constructed with a set of default headers using a parameter serialization specified by this property. By default, this is set to an instance of `AFHTTPRequestSerializer`, which serializes query string parameters for `GET`, `HEAD`, and `DELETE` requests, or otherwise URL-form-encodes HTTP message bodies.

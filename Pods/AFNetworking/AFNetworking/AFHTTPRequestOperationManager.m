@@ -32,7 +32,7 @@
 #endif
 
 @interface AFHTTPRequestOperationManager ()
-//@property (readwrite,nonatomic, strong) NSURL *baseURL;
+@property (readwrite, nonatomic, strong) NSURL *baseURL;
 @end
 
 @implementation AFHTTPRequestOperationManager
@@ -182,7 +182,6 @@
 {
     NSError *serializationError = nil;
     NSMutableURLRequest *request = [self.requestSerializer multipartFormRequestWithMethod:@"POST" URLString:[[NSURL URLWithString:URLString relativeToURL:self.baseURL] absoluteString] parameters:parameters constructingBodyWithBlock:block error:&serializationError];
- 
     if (serializationError) {
         if (failure) {
 #pragma clang diagnostic push
@@ -287,6 +286,5 @@
 
     return HTTPClient;
 }
-
 
 @end
