@@ -11,6 +11,7 @@
 		E109DB6B1D40AC3B00670DAD /* NSArray+NetWorkingMethods.m in Sources */ = {isa = PBXBuildFile; fileRef = E109DB681D40AC3B00670DAD /* NSArray+NetWorkingMethods.m */; };
 		E109DB6C1D40AC3B00670DAD /* NSDictionary+NetWorkingMehods.m in Sources */ = {isa = PBXBuildFile; fileRef = E109DB6A1D40AC3B00670DAD /* NSDictionary+NetWorkingMehods.m */; };
 		E109DB701D40AC5300670DAD /* GApiCache.m in Sources */ = {isa = PBXBuildFile; fileRef = E109DB6F1D40AC5300670DAD /* GApiCache.m */; };
+		E109DB731D40AE9F00670DAD /* GApiCachedObject.m in Sources */ = {isa = PBXBuildFile; fileRef = E109DB721D40AE9F00670DAD /* GApiCachedObject.m */; };
 		E1A20B7F1CFF017300C8FF5E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = E1A20B7E1CFF017300C8FF5E /* main.m */; };
 		E1A20B821CFF017300C8FF5E /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E1A20B811CFF017300C8FF5E /* AppDelegate.m */; };
 		E1A20B851CFF017300C8FF5E /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E1A20B841CFF017300C8FF5E /* ViewController.m */; };
@@ -56,6 +57,8 @@
 		E109DB6A1D40AC3B00670DAD /* NSDictionary+NetWorkingMehods.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+NetWorkingMehods.m"; sourceTree = "<group>"; };
 		E109DB6E1D40AC5300670DAD /* GApiCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GApiCache.h; sourceTree = "<group>"; };
 		E109DB6F1D40AC5300670DAD /* GApiCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GApiCache.m; sourceTree = "<group>"; };
+		E109DB711D40AE9F00670DAD /* GApiCachedObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GApiCachedObject.h; sourceTree = "<group>"; };
+		E109DB721D40AE9F00670DAD /* GApiCachedObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GApiCachedObject.m; sourceTree = "<group>"; };
 		E1A20B7A1CFF017300C8FF5E /* GeitNetwoking.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GeitNetwoking.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E1A20B7E1CFF017300C8FF5E /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		E1A20B801CFF017300C8FF5E /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -147,6 +150,8 @@
 		E109DB6D1D40AC5300670DAD /* GApiCache */ = {
 			isa = PBXGroup;
 			children = (
+				E109DB711D40AE9F00670DAD /* GApiCachedObject.h */,
+				E109DB721D40AE9F00670DAD /* GApiCachedObject.m */,
 				E109DB6E1D40AC5300670DAD /* GApiCache.h */,
 				E109DB6F1D40AC5300670DAD /* GApiCache.m */,
 			);
@@ -441,6 +446,7 @@
 				E1A20C091D001EF000C8FF5E /* GApiAgent.m in Sources */,
 				E1D3D39C1D33521900307F02 /* NSString+md5.m in Sources */,
 				E1A20B7F1CFF017300C8FF5E /* main.m in Sources */,
+				E109DB731D40AE9F00670DAD /* GApiCachedObject.m in Sources */,
 				E1A20BB31CFF043400C8FF5E /* GApiBaseManager.m in Sources */,
 				E1D3D3A21D33953D00307F02 /* DataTransformer.m in Sources */,
 				E1D3D3961D2FC3C900307F02 /* GApiResponse.m in Sources */,

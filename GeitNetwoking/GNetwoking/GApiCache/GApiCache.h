@@ -27,6 +27,24 @@
  */
 - (NSData *)fetchCacheDataWithRequestURL:(NSString *)requestUrl requestParams:(NSDictionary *)params;
 
+
+/**
+ *  内存中保存cache
+ */
+- (void)saveMemoryCacheWithData:(NSData *)cacheData requestURL:(NSString *)requestUrl requestParams:(NSDictionary *)params;
+
+/**
+ *  内存中删除cache
+ */
+- (void)deleteMemoryCacheDataWithRequestURL:(NSString *)requestUrl requestParams:(NSDictionary *)params;
+
+/**
+ *  内存中获取cache
+ */
+- (NSData *)fetchMemoryCacheDataWithRequestURL:(NSString *)requestUrl requestParams:(NSDictionary *)params;
+
+- (void)clearMemoryCache;
+
 - (long long)cacheVersion;
 
 @end

@@ -10,8 +10,11 @@
 #import "NSDictionary+NetWorkingMehods.h"
 #import "GApiConfig.h"
 #import "NSString+md5.h"
+#import "GApiCachedObject.h"
 
 @interface GApiCache ()
+
+@property (nonatomic, strong) NSCache *cache;
 
 @end
 
@@ -29,6 +32,14 @@
     return instance;
 }
 
+- (NSCache *)cache {
+    if (!_cache) {
+        _cache = [NSCache new];
+        _cache.countLimit = 1000;
+    }
+    return _cache;
+}
+
 - (void)saveCacheWithData:(NSData *)cacheData requestURL:(NSString *)requestUrl requestParams:(NSDictionary *)params {
     if (cacheData != nil) {
         [NSKeyedArchiver archiveRootObject:cacheData toFile:[self cacheFilePathWithRequestURL:requestUrl requestParams:params]];
@@ -43,6 +54,36 @@
 - (NSData *)fetchCacheDataWithRequestURL:(NSString *)requestUrl requestParams:(NSDictionary *)params {
     NSData *data = [NSKeyedUnarchiver unarchiveObjectWithFile:[self cacheFilePathWithRequestURL:requestUrl requestParams:params]];
     return data;
+}
+
+- (void)saveMemoryCacheWithData:(NSData *)cacheData requestURL:(NSString *)requestUrl requestParams:(NSDictionary *)params {
+    NSString *key = [[self cacheKeyWithRequestURL:requestUrl requestParams:params] md5];
+    GApiCachedObject *cachedObject = [self.cache objectForKey:key];
+    if (cachedObject == nil) {
+        cachedObject = [[GApiCachedObject alloc] init];
+    }
+    [cachedObject updateContent:cacheData];
+    [self.cache setObject:cachedObject forKey:key];
+}
+
+- (void)deleteMemoryCacheDataWithRequestURL:(NSString *)requestUrl requestParams:(NSDictionary *)params {
+    NSString *key = [[self cacheKeyWithRequestURL:requestUrl requestParams:params] md5];
+    [self.cache removeObjectForKey:key];
+}
+
+- (NSData *)fetchMemoryCacheDataWithRequestURL:(NSString *)requestUrl requestParams:(NSDictionary *)params {
+    NSString *key = [[self cacheKeyWithRequestURL:requestUrl requestParams:params] md5];
+    GApiCachedObject *cachedObject = [self.cache objectForKey:key];
+    if (cachedObject.isOutdated || cachedObject.isEmpty) {
+        return nil;
+    } else {
+        return cachedObject.content;
+    }
+    return nil;
+}
+
+- (void)clearMemoryCache {
+    [self.cache removeAllObjects];
 }
 
 - (long long)cacheVersion {
