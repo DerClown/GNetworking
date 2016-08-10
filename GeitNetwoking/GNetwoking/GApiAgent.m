@@ -93,6 +93,8 @@
     // 合并全局参数
     [requestParams addEntriesFromDictionary:_config.filterApiParams];
     
+    NSString *filteredUrl = [self urlStringWithOriginUrlString:url appendParameters:requestParams];
+    
     GAPIManagerRequestType requestType = api.child.requestType;
     
     [self configRequestManagerSerializer];
@@ -109,8 +111,6 @@
     AFHTTPRequestOperation *requestOperation;
     if (requestType == GAPIManagerRequestTypeGet) {
         if (api.child.resumableDownloadPath) {
-            NSString *filteredUrl = [self urlStringWithOriginUrlString:url appendParameters:requestParams];
-            
             NSURLRequest *requestUrl = [NSURLRequest requestWithURL:[NSURL URLWithString:filteredUrl]];
             AFDownloadRequestOperation *operation = [[AFDownloadRequestOperation alloc] initWithRequest:requestUrl
                                                                                              targetPath:api.child.resumableDownloadPath
@@ -129,7 +129,7 @@
             requestOperation = operation;
             [_manager.operationQueue addOperation:operation];
         } else {
-            requestOperation = [_manager GET:url parameters:requestParams success:^(AFHTTPRequestOperation *operation, id responseObject) {
+            requestOperation = [_manager GET:filteredUrl parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
                 [GApiLogger logDebugInfoWithOperation:operation error:nil];
                 [self cancelRequestApiWithReqeustId:reqeustId];
                 GApiResponse *response = [[GApiResponse alloc] initWithRequestId:reqeustId requestParams:params requestOperation:operation];
@@ -143,7 +143,7 @@
         }
     } else {
         if (api.child.constructingBodyBlock) {
-            requestOperation = [_manager POST:url parameters:requestParams constructingBodyWithBlock:api.child.constructingBodyBlock success:^(AFHTTPRequestOperation * _Nonnull operation, id  _Nonnull responseObject) {
+            requestOperation = [_manager POST:filteredUrl parameters:nil constructingBodyWithBlock:api.child.constructingBodyBlock success:^(AFHTTPRequestOperation * _Nonnull operation, id  _Nonnull responseObject) {
                 [GApiLogger logDebugInfoWithOperation:operation error:nil];
                 [self cancelRequestApiWithReqeustId:reqeustId];
                 GApiResponse *response = [[GApiResponse alloc] initWithRequestId:reqeustId requestParams:params requestOperation:operation];
@@ -156,7 +156,7 @@
             }];
             [requestOperation setUploadProgressBlock:api.child.uploadProgressBlock];
         } else {
-            requestOperation = [_manager POST:url parameters:requestParams success:^(AFHTTPRequestOperation *operation, id responseObject) {
+            requestOperation = [_manager POST:filteredUrl parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
                 [GApiLogger logDebugInfoWithOperation:operation error:nil];
                 [self cancelRequestApiWithReqeustId:reqeustId];
                 GApiResponse *response = [[GApiResponse alloc] initWithRequestId:reqeustId requestParams:params requestOperation:operation];
