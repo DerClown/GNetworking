@@ -75,6 +75,7 @@
     NSString *key = [[self cacheKeyWithRequestURL:requestUrl requestParams:params] md5];
     GApiCachedObject *cachedObject = [self.cache objectForKey:key];
     if (cachedObject.isOutdated || cachedObject.isEmpty) {
+        [self.cache removeObjectForKey:key];
         return nil;
     } else {
         return cachedObject.content;
