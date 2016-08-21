@@ -25,12 +25,12 @@ PODS:
 
 DEPENDENCIES:
   - AFDownloadRequestOperation (~> 2.0.1)
-  - AFNetworking (~> 2.0)
+  - AFNetworking (~> 2.6.3)
 
 SPEC CHECKSUMS:
   AFDownloadRequestOperation: 748a1643423e1ddb23f2178f778087d4f0ae8ac7
   AFNetworking: cb8d14a848e831097108418f5d49217339d4eb60
 
-PODFILE CHECKSUM: b74fb2742bb363998ecce8ac5becd2d2b0c4cdd3
+PODFILE CHECKSUM: b093ef7a09f1c3f7c59c3be058a6b7ec79e3c470
 
 COCOAPODS: 1.0.1
