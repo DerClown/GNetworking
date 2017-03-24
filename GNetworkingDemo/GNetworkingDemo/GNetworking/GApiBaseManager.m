@@ -133,6 +133,16 @@
 
 - (void)handleFailureRequestResult:(GApiResponse *)response withRequestHandlerType:(GAPIManagerRequestHandlerType)handlerType {
     self.requestHandleType = handlerType;
+    switch (response.status) {
+        case GApiResponseStatusFailed:
+            self.requestHandleType = GApiResponseStatusFailed;
+            break;
+        case GApiResponseStatusErrorTimeout:
+            self.requestHandleType = GApiResponseStatusErrorTimeout;
+            break;
+        default:
+            break;
+    }
     [self removeRequestIdWithRequestID:response.requestId];
     [self beforPerformFailureWithResult:response];
     [self.delegate managerApiCallBackDidFailed:self];
