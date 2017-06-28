@@ -12,7 +12,7 @@ GNetworking是一个高度自定义，高效网络请求引擎。使用简单方
 
 4.请求回调协议<GAPIBaseManagerRequestCallBackDelegate>，实现该协议进行数据层&UI层之间的处理。
 
-5.数据处理协议<GApiBaseManagerCallBackDataTransformer>，现在不是很流行MVVC模型嘛。这个协议很方便，而且很快捷的去处理数据转换获取需要的数据模式，然后给出去。它充当了其中的V。
+5.数据处理协议<GApiBaseManagerCallBackDataTransformer>，现在不是很流行MVVC模型嘛。这个协议很方便，而且很快捷的去处理数据转换获取需要的数据模式，然后给出去。它充当了其中的V的桥梁。
 
 EX：
 
