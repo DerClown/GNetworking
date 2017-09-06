@@ -50,6 +50,7 @@
 
 - (void)configRequestManagerSerializer {
     AFHTTPRequestSerializer *requestSerializer = [AFHTTPRequestSerializer serializer];
+    _manager.requestSerializer = requestSerializer;
     
     // 用户名密码
     NSArray *authorizationHeaderFieldArray = [_config requestAuthorizationHeaderFieldArray];
@@ -72,12 +73,10 @@
     }
     
     AFHTTPResponseSerializer *responsSerializer = [AFHTTPResponseSerializer serializer];
+    _manager.responseSerializer = responsSerializer;
     if (_config.acceptableContentTypes) {
         responsSerializer.acceptableContentTypes = _config.acceptableContentTypes;
     }
-    
-    _manager.requestSerializer = requestSerializer;
-    _manager.responseSerializer = responsSerializer;
 }
 
 - (NSInteger)sendRequestApi:(__kindof GApiBaseManager *)api
