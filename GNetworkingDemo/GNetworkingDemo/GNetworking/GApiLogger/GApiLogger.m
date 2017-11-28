@@ -27,16 +27,17 @@
 #endif
 }
 
-+ (void)logDebugInfoWithOperation:(AFHTTPRequestOperation *)operation error:(NSError *)error {
++ (void)logDebugInfoWithOperation:(NSURLSessionTask *)task reponseObject:(id)reponseObject error:(NSError *)error {
 #ifdef DEBUG
     BOOL shouldLogError = error ? YES : NO;
     
     NSMutableString *logString = [NSMutableString stringWithString:@"\n\n==============================================================\n=                        API Response                        =\n==============================================================\n\n"];
+    NSHTTPURLResponse * responses = (NSHTTPURLResponse *)task.response;
     
-    [logString appendFormat:@"Status:\t%ld\t(%@)\n\n", (long)operation.response.statusCode, [NSHTTPURLResponse localizedStringForStatusCode:operation.response.statusCode]];
-    id reponseObject;
-    if (operation.responseObject) {
-        reponseObject = [NSJSONSerialization JSONObjectWithData:operation.responseObject options:NSJSONReadingMutableContainers error:NULL];
+    [logString appendFormat:@"Status:\t%ld\t(%@)\n\n", (long)responses.statusCode, [NSHTTPURLResponse localizedStringForStatusCode:responses.statusCode]];
+    
+    if (reponseObject) {
+        reponseObject = [NSJSONSerialization JSONObjectWithData:reponseObject options:NSJSONReadingMutableContainers error:NULL];
     }
     [logString appendFormat:@"Content:\n%@\n\n", reponseObject ? reponseObject : @"\t\t\t\t\tN/A"];
     if (shouldLogError) {
@@ -49,9 +50,9 @@
     
     [logString appendString:@"\n---------------  Related Request Content  --------------\n"];
     
-    [logString appendFormat:@"\n\nHTTP URL:\n\t%@", operation.request.URL];
-    [logString appendFormat:@"\n\nHTTP Header:\n%@", operation.request.allHTTPHeaderFields ? operation.request.allHTTPHeaderFields : @"\t\t\t\t\tN/A"];
-    NSString *bodyString = [[NSString alloc] initWithData:operation.request.HTTPBody encoding:NSUTF8StringEncoding];
+    [logString appendFormat:@"\n\nHTTP URL:\n\t%@", task.currentRequest.URL];
+    [logString appendFormat:@"\n\nHTTP Header:\n%@", task.currentRequest.allHTTPHeaderFields ? task.currentRequest.allHTTPHeaderFields : @"\t\t\t\t\tN/A"];
+    NSString *bodyString = [[NSString alloc] initWithData:task.currentRequest.HTTPBody encoding:NSUTF8StringEncoding];
     [logString appendFormat:@"\n\nHTTP Body:\n\t%@", bodyString ? bodyString : @"\t\t\t\t\tN/A"];
     
     [logString appendFormat:@"\n\n==============================================================\n=                        Response End                        =\n==============================================================\n\n\n\n"];

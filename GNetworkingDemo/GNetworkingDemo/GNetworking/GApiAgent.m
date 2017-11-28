@@ -14,8 +14,8 @@
 
 @interface GApiAgent ()
 
-@property (nonatomic, strong) AFHTTPRequestOperationManager *manager;
-@property (nonatomic, strong) NSMutableDictionary *requestsRecord;
+@property (nonatomic, strong) AFHTTPSessionManager *manager;
+@property (nonatomic, strong) NSMutableDictionary *taskTables;
 @property (nonatomic, strong) NSNumber *recordedRequestId;
 
 @property (nonatomic, strong) GApiConfig *config;
@@ -38,10 +38,10 @@
 
 - (id)init {
     if (self = [super init]) {
-        _requestsRecord = [NSMutableDictionary new];
+        _taskTables = [NSMutableDictionary new];
         _config = [GApiConfig sharedInstance];
         
-        _manager = [AFHTTPRequestOperationManager manager];
+        _manager = [AFHTTPSessionManager manager];
         _manager.operationQueue.maxConcurrentOperationCount = 3;
         _manager.securityPolicy = _config.securityPolicy;
     }
@@ -75,7 +75,7 @@
     AFHTTPResponseSerializer *responsSerializer = [AFHTTPResponseSerializer serializer];
     _manager.responseSerializer = responsSerializer;
     if (_config.acceptableContentTypes) {
-        responsSerializer.acceptableContentTypes = _config.acceptableContentTypes;
+        _manager.responseSerializer.acceptableContentTypes = _config.acceptableContentTypes;
     }
 }
 
@@ -92,8 +92,6 @@
     // 合并全局参数
     [requestParams addEntriesFromDictionary:_config.filterApiParams];
     
-    NSString *filteredUrl = [self urlStringWithOriginUrlString:url appendParameters:requestParams];
-    
     GAPIManagerRequestType requestType = api.child.requestType;
     
     [self configRequestManagerSerializer];
@@ -105,99 +103,109 @@
     }
     
     // 之所以不用getter，是因为如果放到getter里面的话，每次调用self.recordedRequestId的时候值就都变了，违背了getter的初衷
-    NSNumber *reqeustId = [self generateRequestId];
+    __block NSNumber *taskId = [self generateRequestId];
     
-    AFHTTPRequestOperation *requestOperation;
+    NSURLSessionTask *dataTask = nil;
+    
+    __block typeof(self) weakSelf = self;
     if (requestType == GAPIManagerRequestTypeGet) {
         if (api.child.resumableDownloadPath) {
-            NSURLRequest *requestUrl = [NSURLRequest requestWithURL:[NSURL URLWithString:filteredUrl]];
-            AFDownloadRequestOperation *operation = [[AFDownloadRequestOperation alloc] initWithRequest:requestUrl
-                                                                                             targetPath:api.child.resumableDownloadPath
-                                                                                           shouldResume:YES];
+            NSString *downloadUrl = [self urlStringWithOriginUrlString:url appendParameters:params];
             
-            [operation setProgressiveDownloadProgressBlock:api.child.downloadProgressBlock];
-            [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
-                [GApiLogger logDebugInfoWithOperation:operation error:nil];
-                GApiResponse *response = [[GApiResponse alloc] initWithRequestId:reqeustId requestParams:params requestOperation:operation];
-                success ? success(response) : nil;
-            } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-                [GApiLogger logDebugInfoWithOperation:operation error:error];
-                GApiResponse *response = [[GApiResponse alloc] initWithRequestId:reqeustId requestParams:params requestOperation:operation error:error];
-                failure ? failure(response) : nil;
-            }];
-            requestOperation = operation;
-            [_manager.operationQueue addOperation:operation];
+            NSData *resumeData = [NSData dataWithContentsOfFile:api.child.resumableDownloadPath];
+            if (resumeData) {
+                dataTask = [_manager downloadTaskWithResumeData:resumeData progress:api.child.downloadProgressBlock destination:^NSURL * _Nonnull(NSURL * _Nonnull targetPath, NSURLResponse * _Nonnull response) {
+                    return [NSURL URLWithString:api.child.resumableDownloadPath];
+                } completionHandler:^(NSURLResponse * _Nonnull response, NSURL * _Nullable filePath, NSError * _Nullable error) {
+                    if (!error) {
+                        [weakSelf apiCallBackSuccessWithTaskId:taskId requestParamers:requestParams reponseObject:nil success:success];
+                    } else {
+                        [weakSelf apiCallBackFailedWithTaskId:taskId requestParamers:requestParams error:error failure:failure];
+                    }
+                }];
+            } else {
+                NSURLRequest *downReq = [NSURLRequest requestWithURL:[NSURL URLWithString:downloadUrl]];
+                dataTask = [_manager downloadTaskWithRequest:downReq progress:api.child.downloadProgressBlock destination:^NSURL * _Nonnull(NSURL * _Nonnull targetPath, NSURLResponse * _Nonnull response) {
+                    return [NSURL URLWithString:api.child.resumableDownloadPath];
+                } completionHandler:^(NSURLResponse * _Nonnull response, NSURL * _Nullable filePath, NSError * _Nullable error) {
+                    if (!error) {
+                        [weakSelf apiCallBackSuccessWithTaskId:taskId requestParamers:requestParams reponseObject:nil success:success];
+                    } else {
+                        [weakSelf apiCallBackFailedWithTaskId:taskId requestParamers:requestParams error:error failure:failure];
+                    }
+                }];
+            }
         } else {
-            requestOperation = [_manager GET:filteredUrl parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
-                [GApiLogger logDebugInfoWithOperation:operation error:nil];
-                [self cancelRequestApiWithReqeustId:reqeustId];
-                GApiResponse *response = [[GApiResponse alloc] initWithRequestId:reqeustId requestParams:params requestOperation:operation];
-                success ? success(response) : nil;
-            } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-                [GApiLogger logDebugInfoWithOperation:operation error:error];
-                [self cancelRequestApiWithReqeustId:reqeustId];
-                GApiResponse *response = [[GApiResponse alloc] initWithRequestId:reqeustId requestParams:params requestOperation:operation error:error];
-                failure ? failure(response) : nil;
+            dataTask = [_manager GET:url parameters:params progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+                [weakSelf apiCallBackSuccessWithTaskId:taskId requestParamers:requestParams reponseObject:responseObject success:success];
+            } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+                [weakSelf apiCallBackFailedWithTaskId:taskId requestParamers:requestParams error:error failure:failure];
             }];
         }
     } else {
         if (api.child.constructingBodyBlock) {
-            requestOperation = [_manager POST:filteredUrl parameters:nil constructingBodyWithBlock:api.child.constructingBodyBlock success:^(AFHTTPRequestOperation * _Nonnull operation, id  _Nonnull responseObject) {
-                [GApiLogger logDebugInfoWithOperation:operation error:nil];
-                [self cancelRequestApiWithReqeustId:reqeustId];
-                GApiResponse *response = [[GApiResponse alloc] initWithRequestId:reqeustId requestParams:params requestOperation:operation];
-                success ? success(response) : nil;
-            } failure:^(AFHTTPRequestOperation * _Nullable operation, NSError * _Nonnull error) {
-                [GApiLogger logDebugInfoWithOperation:operation error:error];
-                [self cancelRequestApiWithReqeustId:reqeustId];
-                GApiResponse *response = [[GApiResponse alloc] initWithRequestId:reqeustId requestParams:params requestOperation:operation error:error];
-                failure ? failure(response) : nil;
+            dataTask = [_manager POST:url parameters:params constructingBodyWithBlock:api.child.constructingBodyBlock progress:api.child.uploadProgressBlock success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+                [self apiCallBackSuccessWithTaskId:taskId requestParamers:requestParams reponseObject:responseObject success:success];
+            } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+                [self apiCallBackFailedWithTaskId:taskId requestParamers:requestParams error:error failure:failure];
             }];
-            [requestOperation setUploadProgressBlock:api.child.uploadProgressBlock];
         } else {
-            requestOperation = [_manager POST:filteredUrl parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
-                [GApiLogger logDebugInfoWithOperation:operation error:nil];
-                [self cancelRequestApiWithReqeustId:reqeustId];
-                GApiResponse *response = [[GApiResponse alloc] initWithRequestId:reqeustId requestParams:params requestOperation:operation];
-                success ? success(response) : nil;
-            } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-                [GApiLogger logDebugInfoWithOperation:operation error:error];
-                [self cancelRequestApiWithReqeustId:reqeustId];
-                GApiResponse *response = [[GApiResponse alloc] initWithRequestId:reqeustId requestParams:params requestOperation:operation error:error];
-                failure ? failure(response) : nil;
+            dataTask = [_manager POST:url parameters:params progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+                [self apiCallBackSuccessWithTaskId:taskId requestParamers:requestParams reponseObject:responseObject success:success];
+            } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+                [self apiCallBackFailedWithTaskId:taskId requestParamers:requestParams error:error failure:failure];
             }];
         }
     }
     
+    // 优先级设置
     switch (api.child.requestPriority) {
         case GAPIManagerRequestPriorityHigh:
-            requestOperation.queuePriority = NSOperationQueuePriorityHigh;
+            dataTask.priority = NSURLSessionTaskPriorityHigh;
             break;
         case GAPIManagerRequestPriorityLow:
-            requestOperation.queuePriority = NSOperationQueuePriorityLow;
+            dataTask.priority = NSURLSessionTaskPriorityLow;
             break;
         case GAPIManagerRequestPriorityDefault:
         default:
-            requestOperation.queuePriority = NSOperationQueuePriorityNormal;
+            dataTask.priority = NSURLSessionTaskPriorityDefault;
             break;
     }
     
-    [GApiLogger logDebugInfoWithRequest:requestOperation.request reqeustParams:params reqeustMethod:(api.child.requestType == GAPIManagerRequestTypeGet ? @"GET" : @"POST")];
+    [GApiLogger logDebugInfoWithRequest:dataTask.currentRequest reqeustParams:params reqeustMethod:(api.child.requestType == GAPIManagerRequestTypeGet ? @"GET" : @"POST")];
     
-    if (requestOperation) {
+    if (dataTask) {
         @synchronized(self) {
-            _requestsRecord[reqeustId] = requestOperation;
+            _taskTables[taskId] = dataTask;
         }
     }
     
-    return reqeustId.integerValue;
+    // 发起请求
+    [dataTask resume];
+    
+    return taskId.integerValue;
+}
+
+- (void)apiCallBackSuccessWithTaskId:(NSNumber *)taskId requestParamers:(NSDictionary *)paramers reponseObject:(id)responseObject success:(GAPICallBack)success {
+    [GApiLogger logDebugInfoWithOperation:self.taskTables[taskId] reponseObject:responseObject error:nil];
+    [self cancelRequestApiWithReqeustId:taskId];
+    NSData *responseData = responseObject;
+    GApiResponse *response = [[GApiResponse alloc] initWithRequestId:taskId requestParams:paramers responseObject:responseData error:nil];
+    success ? success(response) : nil;
+}
+
+- (void)apiCallBackFailedWithTaskId:(NSNumber *)taskId requestParamers:(NSDictionary *)paramers error:(NSError *)error failure:(GAPICallBack)failure {
+    [GApiLogger logDebugInfoWithOperation:self.taskTables[taskId] reponseObject:nil error:error];
+    [self cancelRequestApiWithReqeustId:taskId];
+    GApiResponse *response = [[GApiResponse alloc] initWithRequestId:taskId requestParams:paramers responseObject:nil error:error];
+    failure ? failure(response) : nil;
 }
 
 - (void)cancelRequestApiWithReqeustId:(NSNumber *)requestId {
     @synchronized (self) {
-        AFHTTPRequestOperation *requestOperation = _requestsRecord[requestId];
-        [requestOperation cancel];
-        [_requestsRecord removeObjectForKey:requestId];
+        NSURLSessionTask *task = _taskTables[requestId];
+        [task cancel];
+        [_taskTables removeObjectForKey:requestId];
     }
 }
 

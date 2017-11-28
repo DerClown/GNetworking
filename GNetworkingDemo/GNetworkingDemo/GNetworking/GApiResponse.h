@@ -19,7 +19,6 @@ typedef NS_ENUM(NSUInteger, GApiResponseStatus) {
 
 @property (nonatomic, assign, readonly) GApiResponseStatus status;
 
-@property (nonatomic, copy, readonly) id responseObject;
 @property (nonatomic, copy, readonly) NSString *responseString;
 @property (nonatomic, copy, readonly) NSData *responseData;
 @property (nonatomic, copy, readonly) NSDictionary *requestParams;
@@ -30,9 +29,7 @@ typedef NS_ENUM(NSUInteger, GApiResponseStatus) {
 /**
  *  从请求获取数据 isCache = NO
  */
-- (instancetype)initWithRequestId:(NSNumber *)requestId requestParams:(NSDictionary *)requestParams requestOperation:(AFHTTPRequestOperation *)operation;
-
-- (instancetype)initWithRequestId:(NSNumber *)requestId requestParams:(NSDictionary *)requestParams requestOperation:(AFHTTPRequestOperation *)operation error:(NSError *)error;
+- (instancetype)initWithRequestId:(NSNumber *)requestId requestParams:(NSDictionary *)requestParams responseObject:(NSData *)responseObject error:(NSError *)error;
 
 /**
  *  从cache获取数据 isCache = YES

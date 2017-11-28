@@ -8,7 +8,6 @@
 
 #import <Foundation/Foundation.h>
 #import "AFNetworking.h"
-#import "AFDownloadRequestOperation.h"
 
 // 在调用成功之后的params字典里面，用这个key可以取出requestID
 static NSString * const kGAPIBaseManagerRequestID = @"kGAPIBaseManagerRequestID";
@@ -141,9 +140,9 @@ typedef NS_ENUM(NSInteger , GAPIManagerRequestPriority) {
 
 
 typedef void (^AFConstructingBlock)(id<AFMultipartFormData> formData);
-typedef void (^AFUploadProgressBlock)(NSUInteger bytes, long long totalBytes, long long totalBytesExpected);
+typedef void (^AFUploadProgressBlock)(NSProgress *);
 
-typedef void (^AFDownloadProgressBlock)(AFDownloadRequestOperation *operation, NSInteger bytesRead, long long totalBytesRead, long long totalBytesExpected, long long totalBytesReadForFile, long long totalBytesExpectedToReadForFile);
+typedef void (^AFDownloadProgressBlock)(NSProgress *);
 
 
 /**********************************************************/

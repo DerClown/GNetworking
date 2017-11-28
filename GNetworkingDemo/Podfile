@@ -1,5 +1,4 @@
 platform :ios, '7.0'
 target 'GNetworkingDemo' do
-pod 'AFNetworking'
-pod 'AFDownloadRequestOperation', '~> 2.0.1'
+pod 'AFNetworking', '~> 3.1.0'
 end

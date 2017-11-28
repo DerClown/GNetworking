@@ -8,7 +8,6 @@
 
 #import "GApiBaseManager.h"
 #import <netinet/in.h>
-
 #import "GApiCache.h"
 #import "AFNetworkReachabilityManager.h"
 #import "GApiAgent.h"
@@ -97,8 +96,8 @@
 - (void)handleSuccessRequestResult:(GApiResponse *)response {
     switch (response.status) {
         case GApiResponseStatusSuccess: {
-            if (response.responseObject) {
-                _fetchedRawData = [response.responseObject copy];
+            if (response.responseData) {
+                _fetchedRawData = [response.responseData copy];
             } else {
                 _fetchedRawData = [response.responseData copy];
             }
@@ -275,7 +274,7 @@
 
 - (BOOL)callBackDataIsCorrect:(GApiResponse *)response {
     if ([self.validator respondsToSelector:@selector(manager:isCorrectWithCallBackData:)]) {
-        return [self.validator manager:self isCorrectWithCallBackData:response.responseObject];
+        return [self.validator manager:self isCorrectWithCallBackData:response.responseData];
     }
     return YES;
 }
