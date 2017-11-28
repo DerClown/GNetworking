@@ -12,7 +12,7 @@
 
 @property (nonatomic, assign, readwrite) GApiResponseStatus status;
 
-@property (nonatomic, copy, readwrite) id responseObject;
+@property (nonatomic, copy, readwrite) id rawData;
 @property (nonatomic, copy, readwrite) NSString *reponseString;
 @property (nonatomic, copy, readwrite) NSData *responseData;
 @property (nonatomic, copy, readwrite) NSDictionary *requestParams;
@@ -20,36 +20,24 @@
 @property (nonatomic, assign, readwrite) NSInteger requestId;
 @property (nonatomic, assign, readwrite) BOOL isCache;
 
+@property (nonatomic, copy, readwrite) NSString *errorMessage;
+
 @end
 
 @implementation GApiResponse
 
-- (instancetype)initWithRequestId:(NSNumber *)requestId requestParams:(NSDictionary *)requestParams requestOperation:(AFHTTPRequestOperation *)operation {
-    self = [super init];
-    if (self) {
-        self.status = GApiResponseStatusSuccess;
-        self.responseObject = [NSJSONSerialization JSONObjectWithData:operation.responseObject options:NSJSONReadingMutableContainers error:NULL];
-        self.responseData = operation.responseData;
-        self.reponseString = operation.responseString;
-        self.requestParams = requestParams;
-        
-        self.requestId = [requestId integerValue];
-        self.isCache = NO;
-    }
-    return self;
-}
-
-- (instancetype)initWithRequestId:(NSNumber *)requestId requestParams:(NSDictionary *)requestParams requestOperation:(AFHTTPRequestOperation *)operation error:(NSError *)error {
+- (instancetype)initWithRequestId:(NSNumber *)requestId requestParams:(NSDictionary *)requestParams responseObject:(NSData *)responseObject error:(NSError *)error {
     self = [super init];
     if (self) {
         self.status = [self responseStatusWithError:error];
-        self.responseObject = operation.responseObject;
-        self.responseData = operation.responseData;
-        self.reponseString = operation.responseString;
+        self.responseData = responseObject;
+        self.rawData = responseObject ? [NSJSONSerialization JSONObjectWithData:responseObject options:0 error:nil] : nil;
+        self.reponseString = [[NSString alloc] initWithData:responseObject encoding:NSUTF8StringEncoding];
         self.requestParams = requestParams;
-        
         self.requestId = [requestId integerValue];
         self.isCache = NO;
+        
+        self.errorMessage = [self errorMessageWithError:error];
     }
     return self;
 }
@@ -58,7 +46,6 @@
     self = [super init];
     if (self) {
         self.status = [self responseStatusWithError:nil];
-        self.responseObject = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:NULL];
         self.responseData = data;
         self.reponseString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
         
@@ -69,6 +56,7 @@
 }
 
 #pragma mark - private methods
+
 - (GApiResponseStatus)responseStatusWithError:(NSError *)error {
     if (error) {
         GApiResponseStatus result = GApiResponseStatusFailed;
@@ -81,6 +69,14 @@
     } else {
         return GApiResponseStatusSuccess;
     }
+}
+
+- (NSString *)errorMessageWithError:(NSError *)error {
+    if (error.code == NSURLErrorTimedOut) {
+        return @"网络不给力哦";
+    }
+    
+    return nil;
 }
 
 @end

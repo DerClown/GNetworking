@@ -19,7 +19,7 @@ typedef NS_ENUM(NSUInteger, GApiResponseStatus) {
 
 @property (nonatomic, assign, readonly) GApiResponseStatus status;
 
-@property (nonatomic, copy, readonly) id responseObject;
+@property (nonatomic, copy, readonly) id rawData;
 @property (nonatomic, copy, readonly) NSString *responseString;
 @property (nonatomic, copy, readonly) NSData *responseData;
 @property (nonatomic, copy, readonly) NSDictionary *requestParams;
@@ -27,12 +27,13 @@ typedef NS_ENUM(NSUInteger, GApiResponseStatus) {
 @property (nonatomic, assign, readonly) NSInteger requestId;
 @property (nonatomic, assign, readonly) BOOL isCache;
 
+#warning 网络请求不尽相同，但是处理错误信息，还需要各自处理一遍。
+@property (nonatomic, copy, readonly) NSString *errorMessage;
+
 /**
  *  从请求获取数据 isCache = NO
  */
-- (instancetype)initWithRequestId:(NSNumber *)requestId requestParams:(NSDictionary *)requestParams requestOperation:(AFHTTPRequestOperation *)operation;
-
-- (instancetype)initWithRequestId:(NSNumber *)requestId requestParams:(NSDictionary *)requestParams requestOperation:(AFHTTPRequestOperation *)operation error:(NSError *)error;
+- (instancetype)initWithRequestId:(NSNumber *)requestId requestParams:(NSDictionary *)requestParams responseObject:(NSData *)responseObject error:(NSError *)error;
 
 /**
  *  从cache获取数据 isCache = YES

@@ -7,12 +7,11 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "AFHTTPRequestOperation.h"
 
 @interface GApiLogger : NSObject
 
 + (void)logDebugInfoWithRequest:(NSURLRequest *)request reqeustParams:(NSDictionary *)params reqeustMethod:(NSString *)requestMethod;
 
-+ (void)logDebugInfoWithOperation:(AFHTTPRequestOperation *)operation error:(NSError *)error;
++ (void)logDebugInfoWithOperation:(NSURLSessionTask *)task reponseObject:(id)reponseObject error:(NSError *)error;
 
 @end

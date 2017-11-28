@@ -9,7 +9,6 @@
 #import <Foundation/Foundation.h>
 #import "GApiBaseManager.h"
 #import "GApiResponse.h"
-#import "AFDownloadRequestOperation.h"
 
 typedef void(^GAPICallBack)(GApiResponse *);
 

@@ -7,6 +7,7 @@
 //
 
 #import "GApiBaseManager.h"
+#import <netinet/in.h>
 #import "GApiCache.h"
 #import "AFNetworkReachabilityManager.h"
 #import "GApiAgent.h"
@@ -79,7 +80,7 @@
                 
                 return requestId;
             } else {
-                [self handleFailureRequestResult:nil withRequestHandlerType:GAPIManagerRequestHandlerTypeNoNetWok];
+                [self handleFailureRequestResult:nil withRequestHandlerType:GAPIManagerRequestHandlerTypeNoNetWork];
             }
         }
     } else {
@@ -95,8 +96,8 @@
 - (void)handleSuccessRequestResult:(GApiResponse *)response {
     switch (response.status) {
         case GApiResponseStatusSuccess: {
-            if (response.responseObject) {
-                _fetchedRawData = [response.responseObject copy];
+            if (response.responseData) {
+                _fetchedRawData = [response.responseData copy];
             } else {
                 _fetchedRawData = [response.responseData copy];
             }
@@ -131,6 +132,16 @@
 
 - (void)handleFailureRequestResult:(GApiResponse *)response withRequestHandlerType:(GAPIManagerRequestHandlerType)handlerType {
     self.requestHandleType = handlerType;
+    switch (response.status) {
+        case GApiResponseStatusFailed:
+            self.requestHandleType = GApiResponseStatusFailed;
+            break;
+        case GApiResponseStatusErrorTimeout:
+            self.requestHandleType = GApiResponseStatusErrorTimeout;
+            break;
+        default:
+            break;
+    }
     [self removeRequestIdWithRequestID:response.requestId];
     [self beforPerformFailureWithResult:response];
     [self.delegate managerApiCallBackDidFailed:self];
@@ -226,7 +237,6 @@
 }
 
 - (void)beforPerformFailureWithResult:(GApiResponse *)response {
-    self.requestHandleType = GAPIManagerRequestHandlerTypeFailure;
     if (self.interceptor != self && [self.interceptor respondsToSelector:@selector(manager:beforePerformFailWithResult:)]) {
         [self.interceptor manager:self beforePerformFailWithResult:response];
     }
@@ -264,7 +274,7 @@
 
 - (BOOL)callBackDataIsCorrect:(GApiResponse *)response {
     if ([self.validator respondsToSelector:@selector(manager:isCorrectWithCallBackData:)]) {
-        return [self.validator manager:self isCorrectWithCallBackData:response.responseObject];
+        return [self.validator manager:self isCorrectWithCallBackData:response.responseData];
     }
     return YES;
 }
@@ -307,17 +317,27 @@
 }
 
 - (BOOL)isReachable {
-    BOOL isReachability;
-    if ([AFNetworkReachabilityManager sharedManager].networkReachabilityStatus == AFNetworkReachabilityStatusUnknown) {
-        isReachability = YES;
-    } else {
-        isReachability = [[AFNetworkReachabilityManager sharedManager] isReachable];
+    struct sockaddr_in address;
+    bzero(&address, sizeof(address));
+    address.sin_len = sizeof(address);
+    address.sin_family = AF_INET;
+    
+    SCNetworkReachabilityRef reachabilityRed = SCNetworkReachabilityCreateWithAddress(NULL, (struct sockaddr *)&address);
+    SCNetworkReachabilityFlags flags;
+    BOOL retrieveFlags = SCNetworkReachabilityGetFlags(reachabilityRed, &flags);
+    CFRelease(reachabilityRed);
+    if (!retrieveFlags) {
+        return NO;
     }
+    
+    BOOL flagsReachable = flags & kSCNetworkFlagsReachable;
+    BOOL flagsConnection = flags & kSCNetworkFlagsConnectionRequired;
+    
+    BOOL isReachability = flagsReachable && !flagsConnection ? YES : NO;
     
     if (!isReachability) {
-        _requestHandleType = GAPIManagerRequestHandlerTypeNoNetWok;
+        _requestHandleType = GAPIManagerRequestHandlerTypeNoNetWork;
     }
-    
     return isReachability;
 }
 
