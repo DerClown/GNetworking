@@ -20,6 +20,8 @@
 @property (nonatomic, assign, readwrite) NSInteger requestId;
 @property (nonatomic, assign, readwrite) BOOL isCache;
 
+@property (nonatomic, copy, readwrite) NSString *errorMessage;
+
 @end
 
 @implementation GApiResponse
@@ -34,6 +36,8 @@
         self.requestParams = requestParams;
         self.requestId = [requestId integerValue];
         self.isCache = NO;
+        
+        self.errorMessage = [self errorMessageWithError:error];
     }
     return self;
 }
@@ -52,6 +56,7 @@
 }
 
 #pragma mark - private methods
+
 - (GApiResponseStatus)responseStatusWithError:(NSError *)error {
     if (error) {
         GApiResponseStatus result = GApiResponseStatusFailed;
@@ -64,6 +69,14 @@
     } else {
         return GApiResponseStatusSuccess;
     }
+}
+
+- (NSString *)errorMessageWithError:(NSError *)error {
+    if (error.code == NSURLErrorTimedOut) {
+        return @"网络不给力哦";
+    }
+    
+    return nil;
 }
 
 @end

@@ -142,7 +142,7 @@
                 [weakSelf apiCallBackFailedWithTaskId:taskId requestParamers:requestParams error:error failure:failure];
             }];
         }
-    } else {
+    } else if (api.child.requestType == GAPIManagerRequestTypePost) {
         if (api.child.constructingBodyBlock) {
             dataTask = [_manager POST:url parameters:params constructingBodyWithBlock:api.child.constructingBodyBlock progress:api.child.uploadProgressBlock success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
                 [self apiCallBackSuccessWithTaskId:taskId requestParamers:requestParams reponseObject:responseObject success:success];
@@ -156,6 +156,30 @@
                 [self apiCallBackFailedWithTaskId:taskId requestParamers:requestParams error:error failure:failure];
             }];
         }
+    } else if (api.child.requestType == GAPIManagerRequestTypeHead) {
+        dataTask = [_manager HEAD:url parameters:params success:^(NSURLSessionDataTask * _Nonnull task) {
+            [self apiCallBackSuccessWithTaskId:taskId requestParamers:requestParams reponseObject:nil success:success];
+        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+            [self apiCallBackFailedWithTaskId:taskId requestParamers:requestParams error:error failure:failure];
+        }];
+    } else if (api.child.requestType == GAPIManagerRequestTypePut) {
+        dataTask = [_manager PUT:url parameters:params success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+            [self apiCallBackSuccessWithTaskId:taskId requestParamers:requestParams reponseObject:responseObject success:success];
+        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+            [self apiCallBackFailedWithTaskId:taskId requestParamers:requestParams error:error failure:failure];
+        }];
+    } else if (api.child.requestType == GAPIManagerRequestTypePatch) {
+        dataTask = [_manager PATCH:url parameters:params success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+            [self apiCallBackSuccessWithTaskId:taskId requestParamers:requestParams reponseObject:responseObject success:success];
+        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+            [self apiCallBackFailedWithTaskId:taskId requestParamers:requestParams error:error failure:failure];
+        }];
+    } else {
+        dataTask = [_manager DELETE:url parameters:params success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+            [self apiCallBackSuccessWithTaskId:taskId requestParamers:requestParams reponseObject:responseObject success:success];
+        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+            [self apiCallBackFailedWithTaskId:taskId requestParamers:requestParams error:error failure:failure];
+        }];
     }
     
     // 优先级设置

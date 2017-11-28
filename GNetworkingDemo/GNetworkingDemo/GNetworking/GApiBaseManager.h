@@ -27,6 +27,26 @@ typedef NS_ENUM(NSUInteger, GAPIManagerRequestType) {
      *  post 请求
      */
     GAPIManagerRequestTypePost,
+    
+    /*
+     * head 请求
+     */
+    GAPIManagerRequestTypeHead,
+    
+    /*
+     * put 请求
+     */
+    GAPIManagerRequestTypePut,
+    
+    /*
+     * patch 请求
+     */
+    GAPIManagerRequestTypePatch,
+    
+    /*
+     * delete 请求
+     */
+    GAPIManagerRequestTypeDelete,
 };
 
 /**
