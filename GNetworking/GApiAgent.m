@@ -84,7 +84,7 @@
                     failure:(GAPICallBack)failure {
     NSAssert(api.child.requestUrl.length != 0, @"作为GApiBaseManager的孩子，必须实现【GAPIManager】的requestUrl协议，同时requestUrl不能为空。");
     
-    NSString *url = [self buildRequestUrl:api.child.requestUrl];
+    NSString *url = [self api:api buildRequestUrl:api.child.requestUrl];
     
     NSDictionary *params = [api.dataSource paramsForApi];
     
@@ -241,7 +241,7 @@
 
 #pragma mark - private methods
 
-- (NSString *)buildRequestUrl:(NSString *)requestUrl {
+- (NSString *)api:(__kindof GApiBaseManager *)api buildRequestUrl:(NSString *)requestUrl {
     NSString *applyUrl = requestUrl;
     if ([applyUrl hasPrefix:@"http"]) {
         return applyUrl;
@@ -249,6 +249,10 @@
     
     if (![applyUrl hasPrefix:@"/"]) {
         applyUrl = [@"/" stringByAppendingString:applyUrl];
+    }
+    
+    if (api.child.service) {
+        return [NSString stringWithFormat:@"%@%@", api.child.service, applyUrl];
     }
     
     NSAssert(_config.baseUrl.length != 0, @"_baseUrl不能为空。");

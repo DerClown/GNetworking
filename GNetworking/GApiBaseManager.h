@@ -172,10 +172,14 @@ typedef void (^AFDownloadProgressBlock)(NSProgress *);
 //GAPIBaseManager的派生类必须符合这些protocal
 @protocol GAPIManager <NSObject>
 
+// 这个如果是以http://***格式，则优先级最高，就算设置service和baseUrl都会被忽略
 @required
 - (NSString *)requestUrl;
 
 @optional
+
+// 满足一个端多个服务. 优先级高于BaseUrl
+- (NSString *)service;
 
 // 下载
 - (NSString *)resumableDownloadPath;
