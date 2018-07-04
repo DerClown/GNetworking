@@ -67,10 +67,13 @@
     if ([self shouldCallingAPIWithParams:params]) {
         if ([self requestParamsIsCorrect:params]) {
             if ([self isReachable]) {
+                __weak typeof(self) weakSelf = self;
                 requestId = [[GApiAgent sharedInstance] sendRequestApi:self success:^(GApiResponse *response) {
-                                [self handleSuccessRequestResult:response];
+                                __strong typeof(weakSelf) strongSelf = weakSelf;
+                                [strongSelf handleSuccessRequestResult:response];
                             } failure:^(GApiResponse *response) {
-                                [self handleFailureRequestResult:response withRequestHandlerType:GAPIManagerRequestHandlerTypeDefault];
+                                __strong typeof(weakSelf) strongSelf = weakSelf;
+                                [strongSelf handleFailureRequestResult:response withRequestHandlerType:GAPIManagerRequestHandlerTypeDefault];
                             }];
                 [self.requestIdList addObject:@(requestId)];
                 
@@ -232,7 +235,7 @@
 
 - (void)afterPerformSuccessWithResult:(GApiResponse *)response {
     if (self.interceptor != self && [self.interceptor respondsToSelector:@selector(manager:afterPerformSuccessWithResult:)]) {
-        [self.interceptor manager:self beforePerformSuccessWithResult:response];
+        [self.interceptor manager:self afterPerformSuccessWithResult:response];
     }
 }
 

@@ -11,7 +11,6 @@
 #import "NSDictionary+NetWorkingMehods.h"
 #import "GApiLogger.h"
 
-
 @interface GApiAgent ()
 
 @property (nonatomic, strong) AFHTTPSessionManager *manager;
@@ -49,7 +48,7 @@
 }
 
 - (void)configRequestManagerSerializer {
-    AFHTTPRequestSerializer *requestSerializer = [AFHTTPRequestSerializer serializer];
+    AFHTTPRequestSerializer *requestSerializer = [AFJSONRequestSerializer serializer];
     _manager.requestSerializer = requestSerializer;
     
     // 用户名密码
@@ -72,7 +71,7 @@
         }
     }
     
-    AFHTTPResponseSerializer *responsSerializer = [AFHTTPResponseSerializer serializer];
+    AFHTTPResponseSerializer *responsSerializer = [AFJSONResponseSerializer serializer];
     _manager.responseSerializer = responsSerializer;
     if (_config.acceptableContentTypes) {
         _manager.responseSerializer.acceptableContentTypes = _config.acceptableContentTypes;
@@ -107,7 +106,7 @@
     
     NSURLSessionTask *dataTask = nil;
     
-    __block typeof(self) weakSelf = self;
+    __weak __typeof(self) weakSelf = self;
     if (requestType == GAPIManagerRequestTypeGet) {
         if (api.child.resumableDownloadPath) {
             NSString *downloadUrl = [self urlStringWithOriginUrlString:url appendParameters:params];
@@ -117,10 +116,11 @@
                 dataTask = [_manager downloadTaskWithResumeData:resumeData progress:api.child.downloadProgressBlock destination:^NSURL * _Nonnull(NSURL * _Nonnull targetPath, NSURLResponse * _Nonnull response) {
                     return [NSURL URLWithString:api.child.resumableDownloadPath];
                 } completionHandler:^(NSURLResponse * _Nonnull response, NSURL * _Nullable filePath, NSError * _Nullable error) {
+                    __strong typeof(weakSelf) strongSelf = weakSelf;
                     if (!error) {
-                        [weakSelf apiCallBackSuccessWithTaskId:taskId requestParamers:requestParams reponseObject:nil success:success];
+                        [strongSelf apiCallBackSuccessWithTaskId:taskId requestParamers:requestParams reponseObject:nil success:success];
                     } else {
-                        [weakSelf apiCallBackFailedWithTaskId:taskId requestParamers:requestParams error:error failure:failure];
+                        [strongSelf apiCallBackFailedWithTaskId:taskId requestParamers:requestParams error:error failure:failure];
                     }
                 }];
             } else {
@@ -128,57 +128,72 @@
                 dataTask = [_manager downloadTaskWithRequest:downReq progress:api.child.downloadProgressBlock destination:^NSURL * _Nonnull(NSURL * _Nonnull targetPath, NSURLResponse * _Nonnull response) {
                     return [NSURL URLWithString:api.child.resumableDownloadPath];
                 } completionHandler:^(NSURLResponse * _Nonnull response, NSURL * _Nullable filePath, NSError * _Nullable error) {
+                    __strong typeof(weakSelf) strongSelf = weakSelf;
                     if (!error) {
-                        [weakSelf apiCallBackSuccessWithTaskId:taskId requestParamers:requestParams reponseObject:nil success:success];
+                        [strongSelf apiCallBackSuccessWithTaskId:taskId requestParamers:requestParams reponseObject:nil success:success];
                     } else {
-                        [weakSelf apiCallBackFailedWithTaskId:taskId requestParamers:requestParams error:error failure:failure];
+                        [strongSelf apiCallBackFailedWithTaskId:taskId requestParamers:requestParams error:error failure:failure];
                     }
                 }];
             }
         } else {
-            dataTask = [_manager GET:url parameters:params progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-                [weakSelf apiCallBackSuccessWithTaskId:taskId requestParamers:requestParams reponseObject:responseObject success:success];
+            dataTask = [_manager GET:url parameters:requestParams progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+                __strong typeof(weakSelf) strongSelf = weakSelf;
+                [strongSelf apiCallBackSuccessWithTaskId:taskId requestParamers:requestParams reponseObject:responseObject success:success];
             } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-                [weakSelf apiCallBackFailedWithTaskId:taskId requestParamers:requestParams error:error failure:failure];
+                __strong typeof(weakSelf) strongSelf = weakSelf;
+                [strongSelf apiCallBackFailedWithTaskId:taskId requestParamers:requestParams error:error failure:failure];
             }];
         }
     } else if (api.child.requestType == GAPIManagerRequestTypePost) {
         if (api.child.constructingBodyBlock) {
-            dataTask = [_manager POST:url parameters:params constructingBodyWithBlock:api.child.constructingBodyBlock progress:api.child.uploadProgressBlock success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-                [self apiCallBackSuccessWithTaskId:taskId requestParamers:requestParams reponseObject:responseObject success:success];
+            dataTask = [_manager POST:url parameters:requestParams constructingBodyWithBlock:api.child.constructingBodyBlock progress:api.child.uploadProgressBlock success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+                __strong typeof(weakSelf) strongSelf = weakSelf;
+                [strongSelf apiCallBackSuccessWithTaskId:taskId requestParamers:requestParams reponseObject:responseObject success:success];
             } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-                [self apiCallBackFailedWithTaskId:taskId requestParamers:requestParams error:error failure:failure];
+                __strong typeof(weakSelf) strongSelf = weakSelf;
+                [strongSelf apiCallBackFailedWithTaskId:taskId requestParamers:requestParams error:error failure:failure];
             }];
         } else {
-            dataTask = [_manager POST:url parameters:params progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-                [self apiCallBackSuccessWithTaskId:taskId requestParamers:requestParams reponseObject:responseObject success:success];
+            dataTask = [_manager POST:url parameters:requestParams progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+                __strong typeof(weakSelf) strongSelf = weakSelf;
+                [strongSelf apiCallBackSuccessWithTaskId:taskId requestParamers:requestParams reponseObject:responseObject success:success];
             } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-                [self apiCallBackFailedWithTaskId:taskId requestParamers:requestParams error:error failure:failure];
+                __strong typeof(weakSelf) strongSelf = weakSelf;
+                [strongSelf apiCallBackFailedWithTaskId:taskId requestParamers:requestParams error:error failure:failure];
             }];
         }
     } else if (api.child.requestType == GAPIManagerRequestTypeHead) {
-        dataTask = [_manager HEAD:url parameters:params success:^(NSURLSessionDataTask * _Nonnull task) {
-            [self apiCallBackSuccessWithTaskId:taskId requestParamers:requestParams reponseObject:nil success:success];
+        dataTask = [_manager HEAD:url parameters:requestParams success:^(NSURLSessionDataTask * _Nonnull task) {
+            __strong typeof(weakSelf) strongSelf = weakSelf;
+            [strongSelf apiCallBackSuccessWithTaskId:taskId requestParamers:requestParams reponseObject:nil success:success];
         } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-            [self apiCallBackFailedWithTaskId:taskId requestParamers:requestParams error:error failure:failure];
+            __strong typeof(weakSelf) strongSelf = weakSelf;
+            [strongSelf apiCallBackFailedWithTaskId:taskId requestParamers:requestParams error:error failure:failure];
         }];
     } else if (api.child.requestType == GAPIManagerRequestTypePut) {
-        dataTask = [_manager PUT:url parameters:params success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-            [self apiCallBackSuccessWithTaskId:taskId requestParamers:requestParams reponseObject:responseObject success:success];
+        dataTask = [_manager PUT:url parameters:requestParams success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+            __strong typeof(weakSelf) strongSelf = weakSelf;
+            [strongSelf apiCallBackSuccessWithTaskId:taskId requestParamers:requestParams reponseObject:responseObject success:success];
         } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-            [self apiCallBackFailedWithTaskId:taskId requestParamers:requestParams error:error failure:failure];
+            __strong typeof(weakSelf) strongSelf = weakSelf;
+            [strongSelf apiCallBackFailedWithTaskId:taskId requestParamers:requestParams error:error failure:failure];
         }];
     } else if (api.child.requestType == GAPIManagerRequestTypePatch) {
-        dataTask = [_manager PATCH:url parameters:params success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-            [self apiCallBackSuccessWithTaskId:taskId requestParamers:requestParams reponseObject:responseObject success:success];
+        dataTask = [_manager PATCH:url parameters:requestParams success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+            __strong typeof(weakSelf) strongSelf = weakSelf;
+            [strongSelf apiCallBackSuccessWithTaskId:taskId requestParamers:requestParams reponseObject:responseObject success:success];
         } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-            [self apiCallBackFailedWithTaskId:taskId requestParamers:requestParams error:error failure:failure];
+            __strong typeof(weakSelf) strongSelf = weakSelf;
+            [strongSelf apiCallBackFailedWithTaskId:taskId requestParamers:requestParams error:error failure:failure];
         }];
     } else {
-        dataTask = [_manager DELETE:url parameters:params success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-            [self apiCallBackSuccessWithTaskId:taskId requestParamers:requestParams reponseObject:responseObject success:success];
+        dataTask = [_manager DELETE:url parameters:requestParams success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+            __strong typeof(weakSelf)  strongSelf = self;
+            [strongSelf apiCallBackSuccessWithTaskId:taskId requestParamers:requestParams reponseObject:responseObject success:success];
         } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-            [self apiCallBackFailedWithTaskId:taskId requestParamers:requestParams error:error failure:failure];
+            __strong typeof(weakSelf)  strongSelf = self;
+            [strongSelf apiCallBackFailedWithTaskId:taskId requestParamers:requestParams error:error failure:failure];
         }];
     }
     
@@ -251,7 +266,7 @@
         applyUrl = [@"/" stringByAppendingString:applyUrl];
     }
     
-    if (api.child.service) {
+    if ([api.child respondsToSelector:@selector(service)]) {
         return [NSString stringWithFormat:@"%@%@", api.child.service, applyUrl];
     }
     
