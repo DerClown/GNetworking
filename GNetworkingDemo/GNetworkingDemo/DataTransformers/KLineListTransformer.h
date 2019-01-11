@@ -18,6 +18,6 @@ extern NSString *const kKLineListKeyMinVol;
 /**
  *  extern key 可修改为Entity
  */
-@interface KLineListTransformer : NSObject<GApiBaseManagerCallBackDataTransformer>
+@interface KLineListTransformer : NSObject<GAPIBaseManagerCallBackDataUseCustomTransformer>
 
 @end

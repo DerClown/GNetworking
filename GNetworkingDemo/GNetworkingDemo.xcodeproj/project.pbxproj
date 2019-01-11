@@ -27,6 +27,9 @@
 		1EFDDD811D6A030900A39786 /* GApiResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 1EFDDD771D6A030900A39786 /* GApiResponse.m */; };
 		1EFDDD851D6A031A00A39786 /* KLineListManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1EFDDD841D6A031A00A39786 /* KLineListManager.m */; };
 		1EFDDD891D6A038E00A39786 /* KLineListTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1EFDDD881D6A038E00A39786 /* KLineListTransformer.m */; };
+		BE65111621E895B80011A127 /* GApiHelpers.m in Sources */ = {isa = PBXBuildFile; fileRef = BE65111521E895B80011A127 /* GApiHelpers.m */; };
+		BE65111921E899120011A127 /* UserInfoApi.m in Sources */ = {isa = PBXBuildFile; fileRef = BE65111821E899120011A127 /* UserInfoApi.m */; };
+		BE65111C21E899650011A127 /* UserInfoModel.m in Sources */ = {isa = PBXBuildFile; fileRef = BE65111B21E899650011A127 /* UserInfoModel.m */; };
 		FFC474FD469C3B9F3BBB323F /* libPods-GNetworkingDemo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D9D2E36B92F9CA41F2D0DE5E /* libPods-GNetworkingDemo.a */; };
 /* End PBXBuildFile section */
 
@@ -89,6 +92,12 @@
 		1EFDDD871D6A038E00A39786 /* KLineListTransformer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KLineListTransformer.h; sourceTree = "<group>"; };
 		1EFDDD881D6A038E00A39786 /* KLineListTransformer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KLineListTransformer.m; sourceTree = "<group>"; };
 		6DE2DA03264D9DF1D90E957C /* Pods-GNetworkingDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GNetworkingDemo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-GNetworkingDemo/Pods-GNetworkingDemo.debug.xcconfig"; sourceTree = "<group>"; };
+		BE65111421E895B80011A127 /* GApiHelpers.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GApiHelpers.h; sourceTree = "<group>"; };
+		BE65111521E895B80011A127 /* GApiHelpers.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GApiHelpers.m; sourceTree = "<group>"; };
+		BE65111721E899120011A127 /* UserInfoApi.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UserInfoApi.h; sourceTree = "<group>"; };
+		BE65111821E899120011A127 /* UserInfoApi.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UserInfoApi.m; sourceTree = "<group>"; };
+		BE65111A21E899650011A127 /* UserInfoModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UserInfoModel.h; sourceTree = "<group>"; };
+		BE65111B21E899650011A127 /* UserInfoModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UserInfoModel.m; sourceTree = "<group>"; };
 		D9D2E36B92F9CA41F2D0DE5E /* libPods-GNetworkingDemo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-GNetworkingDemo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F3F1C82D2B5094D53A2146D4 /* Pods-GNetworkingDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GNetworkingDemo.release.xcconfig"; path = "Pods/Target Support Files/Pods-GNetworkingDemo/Pods-GNetworkingDemo.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -194,6 +203,8 @@
 				1EFDDD691D6A030900A39786 /* GApiAgent.m */,
 				1EFDDD6A1D6A030900A39786 /* GApiBaseManager.h */,
 				1EFDDD6B1D6A030900A39786 /* GApiBaseManager.m */,
+				BE65111421E895B80011A127 /* GApiHelpers.h */,
+				BE65111521E895B80011A127 /* GApiHelpers.m */,
 				1EFDDD6C1D6A030900A39786 /* GApiCache */,
 				1EFDDD711D6A030900A39786 /* GApiConfig.h */,
 				1EFDDD721D6A030900A39786 /* GApiConfig.m */,
@@ -242,6 +253,10 @@
 			children = (
 				1EFDDD831D6A031A00A39786 /* KLineListManager.h */,
 				1EFDDD841D6A031A00A39786 /* KLineListManager.m */,
+				BE65111721E899120011A127 /* UserInfoApi.h */,
+				BE65111821E899120011A127 /* UserInfoApi.m */,
+				BE65111A21E899650011A127 /* UserInfoModel.h */,
+				BE65111B21E899650011A127 /* UserInfoModel.m */,
 			);
 			path = APIs;
 			sourceTree = "<group>";
@@ -283,8 +298,6 @@
 				1EFDDD021D6A01DE00A39786 /* Sources */,
 				1EFDDD031D6A01DE00A39786 /* Frameworks */,
 				1EFDDD041D6A01DE00A39786 /* Resources */,
-				7CF2C88F8911B61EB00F026C /* [CP] Embed Pods Frameworks */,
-				88915D5DEEEA0F4B030119EB /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -401,36 +414,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		7CF2C88F8911B61EB00F026C /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-GNetworkingDemo/Pods-GNetworkingDemo-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		88915D5DEEEA0F4B030119EB /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-GNetworkingDemo/Pods-GNetworkingDemo-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		D6CCC78992444212C6A41573 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -458,16 +441,19 @@
 			files = (
 				1EFDDD801D6A030900A39786 /* GApiLogger.m in Sources */,
 				1EFDDD7A1D6A030900A39786 /* NSString+md5.m in Sources */,
+				BE65111C21E899650011A127 /* UserInfoModel.m in Sources */,
 				1EFDDD7D1D6A030900A39786 /* GApiCache.m in Sources */,
 				1EFDDD7B1D6A030900A39786 /* GApiAgent.m in Sources */,
 				1EFDDD111D6A01DE00A39786 /* ViewController.m in Sources */,
 				1EFDDD7F1D6A030900A39786 /* GApiConfig.m in Sources */,
+				BE65111921E899120011A127 /* UserInfoApi.m in Sources */,
 				1EFDDD7C1D6A030900A39786 /* GApiBaseManager.m in Sources */,
 				1EFDDD7E1D6A030900A39786 /* GApiCachedObject.m in Sources */,
 				1EFDDD781D6A030900A39786 /* NSArray+NetWorkingMethods.m in Sources */,
 				1EFDDD891D6A038E00A39786 /* KLineListTransformer.m in Sources */,
 				1EFDDD811D6A030900A39786 /* GApiResponse.m in Sources */,
 				1EFDDD791D6A030900A39786 /* NSDictionary+NetWorkingMehods.m in Sources */,
+				BE65111621E895B80011A127 /* GApiHelpers.m in Sources */,
 				1EFDDD0E1D6A01DE00A39786 /* AppDelegate.m in Sources */,
 				1EFDDD0B1D6A01DE00A39786 /* main.m in Sources */,
 				1EFDDD851D6A031A00A39786 /* KLineListManager.m in Sources */,

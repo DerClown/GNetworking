@@ -20,9 +20,31 @@
 
 @implementation ViewController
 
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    UINavigationBar *Bar = self.navigationController.navigationBar;
+    CGRect frame = Bar.frame;
+    frame.size.height = 200;
+    [Bar setFrame:frame];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+    self.title = @"nimabi";
+    self.navigationItem.prompt = @"test";
+    self.navigationController.navigationBar.prefersLargeTitles = YES;
+    for (UIView *vola in self.navigationController.navigationBar.subviews) {
+        NSLog(@"%@", NSStringFromClass([vola class]));
+        if ([NSStringFromClass([vola class]) isEqualToString:@"_UIBarBackground"]) {
+//            UILabel *prompt = vola.subviews.firstObject;
+//            prompt.textColor = [UIColor redColor];
+//            prompt.font = [UIFont boldSystemFontOfSize:20];
+//            prompt.textColor = [UIColor clearColor];
+            [vola setFrame:CGRectMake(0, 0, vola.frame.size.width, 100)];
+            vola.backgroundColor = [UIColor redColor];
+        }
+    }
     //发起请求
     self.chartApi = [[KLineListManager alloc] init];
     self.chartApi.delegate = self;
@@ -35,8 +57,8 @@
 
 #pragma mark - GAPIBaseManagerRequestCallBackDelegate
 
-- (void)managerApiCallBackDidSuccess:(__kindof GApiBaseManager *)manager {
-    NSDictionary *lineData = [self.chartApi fetchDataWithTransformer:self.lineListTransformer];
+- (void)manager:(__kindof GApiBaseManager *)manager didApiCallBackSuccessData:(id)data {
+    NSDictionary *lineData = (NSDictionary *)data;
     NSLog(@"result: %@", lineData);
 }
 

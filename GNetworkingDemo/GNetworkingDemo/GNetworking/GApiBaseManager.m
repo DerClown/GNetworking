@@ -12,6 +12,7 @@
 #import "AFNetworkReachabilityManager.h"
 #import "GApiAgent.h"
 #import "GApiResponse.h"
+#import "GApiHelpers.h"
 
 @interface GApiBaseManager ()
 
@@ -22,6 +23,8 @@
 @property (nonatomic, strong) NSMutableArray *requestIdList;
 
 @property (nonatomic, strong) GApiCache *cache;
+
+@property (nonatomic, weak) id<GAPIBaseManagerCallBackDataUseCustomTransformer>customTransformer;
 
 @end
 
@@ -93,7 +96,6 @@
     return requestId;
 }
 
-
 #pragma mark - api call back handle methods
 
 - (void)handleSuccessRequestResult:(GApiResponse *)response {
@@ -113,7 +115,7 @@
                 }
                 
                 [self beforPerformSuccessWithResult:response];
-                [self.delegate managerApiCallBackDidSuccess:self];
+                [self.delegate manager:self didApiCallBackSuccessData:[self fetchData]];
                 [self afterPerformSuccessWithResult:response];
                 
             } else {
@@ -213,10 +215,20 @@
     [self.requestIdList removeObject:@(requestId)];
 }
 
-- (id)fetchDataWithTransformer:(id<GApiBaseManagerCallBackDataTransformer>)transformer {
+- (void)addCustomTransformer:(id<GAPIBaseManagerCallBackDataUseCustomTransformer>)transformer {
+    self.customTransformer = transformer;
+}
+
+- (id)fetchData {
     id resultData;
-    if ([transformer respondsToSelector:@selector(manager:transformData:)]) {
-        resultData = [transformer manager:self transformData:self.fetchedRawData];
+    if ([self.transformerToTargetModel respondsToSelector:@selector(transformerToTargetModel)]) {
+        if ([self conformsToProtocol:@protocol(GAPIBaseManagerCallBackDataTransformerToTargetModel) ]) {
+            resultData = [GApiHelpers rawData:self.fetchedRawData transformerToTargetModel:self.transformerToTargetModel.rawDataTransformerToTargetModel];
+        } else {
+            NSAssert(NO, @"子类必须遵循实现【GApiBaseManagerCallBackDataTransformerToTargetModel】协议");
+        }
+    } else if ([self.customTransformer respondsToSelector:@selector(manager:transformData:)]) {
+        resultData = [self.customTransformer manager:self transformData:self.fetchedRawData];
     } else {
         resultData = [self.fetchedRawData mutableCopy];
     }

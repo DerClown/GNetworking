@@ -110,19 +110,30 @@ typedef NS_ENUM(NSInteger , GAPIManagerRequestPriority) {
 @protocol GAPIBaseManagerRequestCallBackDelegate <NSObject>
 
 @required
-- (void)managerApiCallBackDidSuccess:(__kindof GApiBaseManager *)manager;
+- (void)manager:(__kindof GApiBaseManager *)manager didApiCallBackSuccessData:(id)data;
 - (void)managerApiCallBackDidFailed:(__kindof GApiBaseManager *)manager;
 
 @end
 
 /**********************************************************/
-/*                      数据转换器                         */
+/*                  自定义数据转换器                         */
 /**********************************************************/
-
-@protocol GApiBaseManagerCallBackDataTransformer <NSObject>
+// 注意：优先级低于 GAPIBaseManagerCallBackDataTransformerToTargetModel
+@protocol GAPIBaseManagerCallBackDataUseCustomTransformer <NSObject>
 
 @required
-- (id)manager:(GApiBaseManager *)manager transformData:(id)data;
+- (id)manager:(__kindof GApiBaseManager *)manager transformData:(id)data;
+
+@end
+
+/**********************************************************/
+/*                      数据转model                        */
+/**********************************************************/
+// 注意：必须子类实现，优先级最高！
+@protocol GAPIBaseManagerCallBackDataTransformerToTargetModel <NSObject>
+
+@required
+- (nonnull Class)rawDataTransformerToTargetModel;
 
 @end
 
@@ -140,9 +151,9 @@ typedef NS_ENUM(NSInteger , GAPIManagerRequestPriority) {
 @protocol GAPIManagerValiator <NSObject>
 
 @optional
-- (BOOL)manager:(GApiBaseManager *)manager isCorrectWithRequestParams:(NSDictionary *)params;
+- (BOOL)manager:(__kindof GApiBaseManager *)manager isCorrectWithRequestParams:(NSDictionary *)params;
 
-- (BOOL)manager:(GApiBaseManager *)manager isCorrectWithCallBackData:(id)data;
+- (BOOL)manager:(__kindof GApiBaseManager *)manager isCorrectWithCallBackData:(id)data;
 
 @end
 
@@ -207,14 +218,14 @@ typedef void (^AFDownloadProgressBlock)(NSProgress *);
 
 @optional
 
-- (void)manager:(GApiBaseManager *)manager beforePerformSuccessWithResult:(GApiResponse *)response;
-- (void)manager:(GApiBaseManager *)manager afterPerformSuccessWithResult:(GApiResponse *)response;
+- (void)manager:(__kindof GApiBaseManager *)manager beforePerformSuccessWithResult:(GApiResponse *)response;
+- (void)manager:(__kindof GApiBaseManager *)manager afterPerformSuccessWithResult:(GApiResponse *)response;
 
-- (void)manager:(GApiBaseManager *)manager beforePerformFailWithResult:(GApiResponse *)response;
-- (void)manager:(GApiBaseManager *)manager afterPerformFailWithResult:(GApiResponse *)response;
+- (void)manager:(__kindof GApiBaseManager *)manager beforePerformFailWithResult:(GApiResponse *)response;
+- (void)manager:(__kindof GApiBaseManager *)manager afterPerformFailWithResult:(GApiResponse *)response;
 
-- (BOOL)manager:(GApiBaseManager *)manager shouldCallApiWithParams:(NSDictionary *)params;
-- (void)manager:(GApiBaseManager *)manager afterCallingApiWithParams:(NSDictionary *)params;
+- (BOOL)manager:(__kindof GApiBaseManager *)manager shouldCallApiWithParams:(NSDictionary *)params;
+- (void)manager:(__kindof GApiBaseManager *)manager afterCallingApiWithParams:(NSDictionary *)params;
 
 @end
 
@@ -228,6 +239,9 @@ typedef void (^AFDownloadProgressBlock)(NSProgress *);
 @property (nonatomic, weak) id<GAPIManagerValiator> validator;
 @property (nonatomic, weak) NSObject<GAPIManager> *child;
 @property (nonatomic, weak) id<GApiBaseManagerInterceptor> interceptor;
+
+// 必须子类实现 
+@property (nonatomic, weak) id<GAPIBaseManagerCallBackDataTransformerToTargetModel>transformerToTargetModel;
 
 //请求处理类型
 @property (nonatomic, readonly) GAPIManagerRequestHandlerType requestHandleType;
@@ -247,8 +261,10 @@ typedef void (^AFDownloadProgressBlock)(NSProgress *);
 - (void)cancelAllRequests;
 - (void)cancelRequestWithRequestId:(NSInteger)requestId;
 
-//获取可直接使的数据
-- (id)fetchDataWithTransformer:(id<GApiBaseManagerCallBackDataTransformer>)transformer;
+//添加转换器
+// 注意：数据转换的优先级别
+// GAPIBaseManagerCallBackDataTransformerToTargetModel > GApiBaseManagerCallBackDataTransformer > fetchRawData
+- (void)addCustomTransformer:(id<GAPIBaseManagerCallBackDataUseCustomTransformer>)transformer;
 
 /*
  *  主意：
